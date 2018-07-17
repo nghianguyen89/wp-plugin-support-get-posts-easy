@@ -200,9 +200,17 @@ function sgpe_shortcode_getposts( $atts ) {
         
         /* get template post list */        
         $template_default = dirname(__FILE__) . '/templates/default/post.php';
-        $template_customs = dirname(__FILE__) . '/templates/' . $atts['template'] . '.php';
+		$template_customs = dirname(__FILE__) . '/templates/' . $atts['template'] . '.php';
+		
+		/* options */
+		$sgpe_post_options .= 	'"itemColWidth": 300,' .
+								'"itemSelector": ".sgpe-listgroup__block",' . 
+								'"post_type" : "' . $atts['post_type'] . '",' .
+								'"taxonomy" : "' . $atts['taxonomy'] . '",' .
+								'"paged" : ' . $paged . ',' .
+								'"pagerall" : ' . $sgpe_getposts->max_num_pages;
 
-        echo '<div id="sgpe-' . $atts['post_type'] . '" class="sgpe-list" data-taxonomy="' . $atts['taxonomy'] . '" data-paged="' . $paged . '" data-pagerall="' . $sgpe_getposts->max_num_pages . '">';
+        echo '<div class="sgpe-list" data-options=\'{' . $sgpe_post_options . '}\'>';
             if( $atts['template'] != '' && file_exists( $template_customs ) ) {
                 include( $template_customs );
             } else {

@@ -8,7 +8,7 @@
  */
 
 (function ($) {
-    
+
     var sgpe_grid = $(".sgpe-listgroup");
     var total_grid = sgpe_grid.length;
     var _space = $(window).width() > 800 ? 25 : 15;
@@ -16,12 +16,12 @@
     if (total_grid > 0) {
 
         sgpe_grid.each(function (i) {
-            var _pagerall = $(this).parents('.sgpe-list').data('pagerall');
+            var sgpe_options = $(this).parents('.sgpe-list').data('options');
             var _btn_loadmore = $(this).parents('.sgpe-list').find('.sgpe-loadmore');
 
             /* init masonry */
             var _thisGrid = $(this).masonry({
-                itemSelector: $(this).data('options').itemSelector,
+                itemSelector: sgpe_options.itemSelector,
                 gutter: _space,
                 percentPosition: true,
                 horizontalOrder: true
@@ -33,7 +33,7 @@
             }, 500);
 
             /* hide buton loadmore if 1 page */
-            if ( _pagerall <= 1) {
+            if ( sgpe_options.pagerall <= 1) {
                 _btn_loadmore.hide();
             }
 
