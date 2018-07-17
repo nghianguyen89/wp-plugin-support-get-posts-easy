@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Easy Get Custom Posts
+Plugin Name: Support Get Posts Easy
 Plugin URI: http://www.fb.com/nghianguyen1989
 Description: Support get post easy
 Version: 1.0
@@ -12,6 +12,20 @@ Text Domain: sgpe
 */
 
 
+/**
+ * Function 	: remove_jquery_masonry_default()
+ * Description  : Remove defaut masonry
+ * @return 		: null
+ */
+function remove_jquery_masonry_default( ){
+	wp_dequeue_script( 'masonry' );
+	wp_deregister_script( 'masonry');
+    wp_dequeue_script( 'imagesloaded' );
+	wp_deregister_script( 'imagesloaded');	
+	wp_dequeue_script( 'jquery-masonry' );
+    wp_deregister_script( 'jquery-masonry');
+}
+add_action( 'wp_enqueue_scripts', 'remove_jquery_masonry_default' );
 
 /**
  * Enqueue styles & scripts in front-end.
@@ -19,14 +33,8 @@ Text Domain: sgpe
 function sgpe_scripts_styles() {
     /* sgpe styles */
     wp_enqueue_style( 'sgpe-styles', plugins_url( 'css/style.css', __FILE__ ), array(), null );
-    /* masonary */
-    $handle = 'masonry.pkgd.min.js';
-    $list = 'enqueued';
-    if ( wp_script_is( $handle, $list ) ) {
-        return;
-    } else {
-        wp_enqueue_script( 'sgpe-masonry', plugins_url( 'js/masonry.pkgd.min.js', __FILE__ ), array(), null, true );
-    }
+	/* masonary */
+	wp_enqueue_script( 'sgpe-masonry', plugins_url( 'js/masonry.pkgd.min.js', __FILE__ ), array(), null, true );
     /* sgpe scripts ajax-getmore */
     wp_enqueue_script( 'sgpe-ajax-getmore', plugins_url( 'js/ajax-getmore.js', __FILE__ ), array(), null, true );
 }
@@ -194,13 +202,14 @@ function sgpe_shortcode_getposts( $atts ) {
         $template_default = dirname(__FILE__) . '/templates/default/post.php';
         $template_customs = dirname(__FILE__) . '/templates/' . $atts['template'] . '.php';
 
-        echo '<div id="sgpe-' . $atts['post_type'] . '" class="sgpe-list ' . $atts['post_type'] . '" data-type="' . $atts['post_type'] . '" data-taxonomy="' . $atts['taxonomy'] . '" data-paged="' . $paged . '" data-pagerall="' . $sgpe_getposts->max_num_pages . '">';
+        echo '<div id="sgpe-' . $atts['post_type'] . '" class="sgpe-list" data-taxonomy="' . $atts['taxonomy'] . '" data-paged="' . $paged . '" data-pagerall="' . $sgpe_getposts->max_num_pages . '">';
             if( $atts['template'] != '' && file_exists( $template_customs ) ) {
                 include( $template_customs );
             } else {
                 include( $template_default );
-            }
-        echo '</div>';
+			}
+			echo '<p class="sgpe-loadmore" data-post_type="' . $atts['post_type'] . '"><a href="#">load more ...</a></p>';
+		echo '</div>';
 
 		wp_reset_postdata();
 		
@@ -221,5 +230,18 @@ function sgpe_shortcode_getposts( $atts ) {
 }
 add_shortcode( 'sgpe', 'sgpe_shortcode_getposts' );
 
+/**
+ * Function 	: sgpe_loadmore_post()
+ * Description  : Load more post
+ * @return 		: post
+ */
+add_action( 'wp_ajax_sgpe_loadmore_post', 'sgpe_loadmore_post' );
+add_action( 'wp_ajax_nopriv_sgpe_loadmore_post', 'sgpe_loadmore_post' );
+function sgpe_loadmore_post() {
+	$next_page = isset( $_POST['next_paged'] ) ? ' paged="' . $_POST['next_paged'] . '" ' : '';
+	$category = isset( $_POST['cate_id'] ) ? ' term_id="' . $_POST['cate_id'] . '" ' : '';
+	echo do_shortcode( '[GET_LIST post_type="practice_news" taxonomy="cate_practice_news"' . $next_page . $category . ' posts_per_page="12" pagination="false" template="template-list/news_archive.php" limit_text="70"]' );
+	die();
+}
 
 ?>

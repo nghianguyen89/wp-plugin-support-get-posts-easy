@@ -10,15 +10,15 @@
 
 <?php
 
-	echo '<div class="sgpe-listgroup">';
-		/* grid-config */
-		echo '<div class="sgpe-grid-sizer"></div>';
-		echo '<div class="sgpe-gutter-sizer"></div>';
-		echo '<div class="sgpe-grid-item"></div>';
+	echo '<div class="sgpe-listgroup" data-options=\'{ "columnWidth": 300, "itemSelector": ".sgpe-listgroup__block" }\'>';
+		
+	/* grid-config */
+		// echo '<div class="sgpe-grid-sizer"></div>';
+		// echo '<div class="sgpe-gutter-sizer"></div>';
+		// echo '<div class="sgpe-grid-item"></div>';
 		while( $sgpe_getposts->have_posts() ) {
-			$sgpe_getposts->the_post();
-			
-			echo '<div class="sgpe-listgroup__block sgpe-grid-item">';
+			$sgpe_getposts->the_post();			
+			echo '<div class="sgpe-listgroup__block">';
 				/* post-image */				
 				echo '<div class="sgpe-listgroup__image">';
 					echo '<a href="' . get_the_permalink() . '">';

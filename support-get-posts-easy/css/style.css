@@ -1,15 +1,6 @@
 /* list */
 
-.sgpe-grid-sizer,
-.sgpe-grid-item {
-    width: 23.5%;
-}
-
-.sgpe-gutter-sizer {
-    width: 1.5%;
-}
-
-.sgpe-listgroup {
+.sgpe-list {
     clear: both;
     width: 100%;
     max-width: 1280px;
@@ -17,7 +8,12 @@
     padding: 50px 0 50px;
 }
 
+.sgpe-listgroup {
+    width: 100%;    
+}
+
 .sgpe-listgroup__block {
+    width: 300px;
     background-color: #fff;
     margin-bottom: 20px;
     border: 1px solid #A6A6A6;
@@ -79,51 +75,49 @@
     opacity: .7;
 }
 
+.sgpe-loadmore {
+    clear: both;
+    text-align: center;
+    padding: 20px 0 20px;
+}
+
+.sgpe-loadmore a{
+    color: #fff;
+    background-color: #192D4A;
+    background-position: right 10px center;
+    background-repeat: no-repeat;
+    background-size: 30px auto;
+    width: 150px;
+    padding: 10px 10px 10px 10px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.sgpe-loadmore a:hover{
+    opacity: .95;
+    text-decoration: none;
+    background-image: url(../images/loadmore.svg);
+}
+
 @media only screen and (max-width:800px) {
     /* list */
-    .sgpe-grid-sizer,
-    .sgpe-grid-item {
-        width: 30%;
-    }
-    .sgpe-gutter-sizer {
-        width: 3.333%;
-    }
-    .sgpe-listgroup {
-        width: 95%;
-        margin: 0 0 0 4%;
-    }
-    .sgpe-listgroup__date,
-    .sgpe-listgroup__category a {
-        font-size: 75%;
+    .sgpe-listgroup__block {
+        width: 31.6%;
     }
     .sgpe-listgroup__title {
-        font-size: 100%;
-    }
-    .sgpe-listgroup__content {
-        font-size: 90%;
+        font-size: 110%;
     }
 }
 
 @media only screen and (max-width:600px) {
-    .sgpe-grid-sizer,
-    .sgpe-grid-item {
-        width: 47%;
-    }
-    .sgpe-gutter-sizer {
-        width: 3%;
+    .sgpe-listgroup__block {
+        width: 48%;
     }
 }
 
 @media only screen and (max-width:360px) {
-    .sgpe-grid-sizer,
-    .sgpe-grid-item {
+    .sgpe-listgroup__block {
         width: 100%;
-    }
-    .sgpe-gutter-sizer {
-        width: 0;
-    }
-    .sgpe-listgroup {
-        width: 95%;
-        margin: 0 auto;
     }
 }
