@@ -98,16 +98,16 @@ function pagination_customize( $numpages = '', $pagerange = '', $paged='', $show
 	
 	/*layout*/
 	if ($paginate_links) {
-		echo "<div class='st-pagelink' data='". $paged . "'>";
+		echo "<div class='pager-list' data='". $paged . "'>";
 			if( $show_first_last ){
 				if( $paged > 1 ){
-					echo '<a class="first page-numbers" href="../1/' . $paramURL . '">&laquo;</a>';
+					echo '<a class="first pager" href="../1/' . $paramURL . '">&laquo;</a>';
 				}
 				echo $paginate_links;
 				if( $paged == 1 ){
-					echo '<a class="last page-numbers" href="page/' . $numpages . $paramURL . '">&raquo;</a>';
+					echo '<a class="last pager" href="page/' . $numpages . $paramURL . '">&raquo;</a>';
 				}else if( $paged < $numpages ){
-					echo '<a class="last page-numbers" href="../' . $numpages . $paramURL . '">&raquo;</a>';
+					echo '<a class="last pager" href="../' . $numpages . $paramURL . '">&raquo;</a>';
 				}
 			}else{
 				echo $paginate_links;
@@ -130,8 +130,9 @@ function sgpe_shortcode_getposts( $atts ) {
 			'limit_text'	   => 0,
 			'taxonomy'		   => '',
 			'term_id'		   => '',
-            'template'		   => '',
-            'nopost'       => 'Sorry, no post found.',
+			'template_custom'  => 'false',
+			'template_name'    => '',
+            'nopost_message'       => 'Sorry, no post found.',
 			'paged'		   	   => 1,
 			'posts_per_page'   => -1,
 			'category'         => '',
@@ -199,24 +200,30 @@ function sgpe_shortcode_getposts( $atts ) {
 	if( $sgpe_getposts->have_posts() ) {
         
         /* get template post list */        
-        $template_default = dirname(__FILE__) . '/templates/default/post.php';
-		$template_customs = dirname(__FILE__) . '/templates/' . $atts['template'] . '.php';
+		$template_default_post_content 	= dirname(__FILE__) . '/templates/post/list-main.php';
+		$template_default_post_loop 	= dirname(__FILE__) . '/templates/post/list-loop.php';
+
+		//$template_customs = dirname(__FILE__) . '/templates/' . $atts['template'] . '.php';
 		
 		/* options */
-		$sgpe_post_options .= 	'"itemColWidth": 300,' .
-								'"itemSelector": ".sgpe-listgroup__block",' . 
-								'"post_type" : "' . $atts['post_type'] . '",' .
-								'"taxonomy" : "' . $atts['taxonomy'] . '",' .
-								'"paged" : ' . $paged . ',' .
-								'"pagerall" : ' . $sgpe_getposts->max_num_pages;
+		$sgpe_post_options .= 	'"msnrColWidth":300,' .
+								'"msnrItemSelector":".sgpe-listgroup__block",' . 
+								'"postType":"' . $atts['post_type'] . '",' .
+								'"postTaxonomy":"' . $atts['taxonomy'] . '",' .
+								'"postTemplateCustom":"' . $atts['template_custom'] . '",' .
+								'"postTemplateName":"' . $atts['template_name'] . '",' .
+								'"siteUrl":"' . get_site_url() . '",' .
+								'"pageCurrent":' . $paged . ',' .
+								'"pageAll":' . $sgpe_getposts->max_num_pages;
 
         echo '<div class="sgpe-list" data-options=\'{' . $sgpe_post_options . '}\'>';
-            if( $atts['template'] != '' && file_exists( $template_customs ) ) {
-                include( $template_customs );
-            } else {
-                include( $template_default );
-			}
-			echo '<p class="sgpe-loadmore" data-post_type="' . $atts['post_type'] . '"><a href="#">load more ...</a></p>';
+            // if( $atts['template'] != '' && file_exists( $template_customs ) ) {
+            //     include( $template_customs );
+            // } else {
+            //     include( $template_default_post_content );
+			// }
+			include( $template_default_post_content );
+			echo '<p class="sgpe-loadmore" id="sgpe-loadmore_' . $atts['post_type'] . '"><a href="#">load more ...</a></p>';
 		echo '</div>';
 
 		wp_reset_postdata();
@@ -232,7 +239,7 @@ function sgpe_shortcode_getposts( $atts ) {
 		
 	}else{
 		/* no post */
-		echo '<p class="sgpe-no-post">' . $atts['nopost'] . '</p>';
+		echo '<p class="sgpe-no-post">' . $atts['nopost_message'] . '</p>';
 	}
 	return ob_get_clean();
 }
@@ -246,9 +253,8 @@ add_shortcode( 'sgpe', 'sgpe_shortcode_getposts' );
 add_action( 'wp_ajax_sgpe_loadmore_post', 'sgpe_loadmore_post' );
 add_action( 'wp_ajax_nopriv_sgpe_loadmore_post', 'sgpe_loadmore_post' );
 function sgpe_loadmore_post() {
-	$next_page = isset( $_POST['next_paged'] ) ? ' paged="' . $_POST['next_paged'] . '" ' : '';
-	$category = isset( $_POST['cate_id'] ) ? ' term_id="' . $_POST['cate_id'] . '" ' : '';
-	echo do_shortcode( '[GET_LIST post_type="practice_news" taxonomy="cate_practice_news"' . $next_page . $category . ' posts_per_page="12" pagination="false" template="template-list/news_archive.php" limit_text="70"]' );
+	$param = $_POST[ 'getpost_option' ]; var_dump($param);
+	// do_shortcode( '[sgpe post_type="' . $param['post_type'] . '" pagination="false"]' );
 	die();
 }
 
