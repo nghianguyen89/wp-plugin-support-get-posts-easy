@@ -11,7 +11,7 @@
 <?php
 
 	echo '<div class="sgpe-listgroup">';
-
+		
 		while( $sgpe_getposts->have_posts() ) {
 			$sgpe_getposts->the_post();			
 			/* loop content template */

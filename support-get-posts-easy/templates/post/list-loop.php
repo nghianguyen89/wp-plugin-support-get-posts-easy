@@ -28,7 +28,7 @@
 			/* content */
 			echo '<div class="sgpe-listgroup__content">' . limit_post_content( get_the_content(), 70 ) . '</div>';
 			/* category */
-			include( 'cate.php' );
+			include( 'item-cate.php' );
 		echo '</div>';				
 	echo '</div>';
 

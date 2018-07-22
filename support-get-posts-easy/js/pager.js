@@ -49,9 +49,9 @@
         $(sgpe_loadmore).on("click", function (e) {
             e.preventDefault();
             var obj = $(this).parents(sgpe_container).data("options");
-
+            console.log(obj);
             $.post(obj.siteUrl + "/wp-admin/admin-ajax.php", {
-                action: 'sgpe_loadmore_post',
+                action: 'pager',
                 getpost_option: obj
             })
             .done(function (data) {
