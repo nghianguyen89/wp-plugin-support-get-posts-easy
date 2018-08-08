@@ -184,6 +184,7 @@ function sgpe_shortcode_getposts( $atts ) {
 								'"postTaxonomy":"' . $sgpe_taxonomy . '",' .
 								'"postPerPage":"' . $sgpe_posts_per_page . '",' .
 								'"pageAll":"' . $sgpe_getposts->max_num_pages . '",' .
+								'"termsShow":"' . $sgpe_terms_show . '",' .
 								'"siteUrl":"' . get_site_url() . '"';
 		
 		if( !empty( $_POST[ 'options' ] ) ) {
@@ -228,10 +229,11 @@ function sgpe_pager() {
 	$post_type		= $param['postType'];
 	$taxonomy		= $param['postTaxonomy'];	
 	$posts_per_page	= $param['postPerPage'];
+	$terms_show		= $param['termsShow'];
 
 	/* get post of next page */
 	$post_loop 	= dirname(__FILE__) . '/templates/post/list-loop.php';
-	echo do_shortcode( '[sgpe post_type="' . $post_type . '" taxonomy="' . $taxonomy . '" posts_per_page="' . $posts_per_page . '" paged="' . $paged . '" template="' . $post_loop . '" pagination="false"]' );
+	echo do_shortcode( '[sgpe post_type="' . $post_type . '" taxonomy="' . $taxonomy . '" terms_show="' . $terms_show . '" posts_per_page="' . $posts_per_page . '" paged="' . $paged . '" template="' . $post_loop . '" pagination="false"]' );
 	die();
 }
 

@@ -15,8 +15,14 @@
 			/* post-image */				
 			echo '<div class="sgpe-listgroup__image">';
 				echo '<a href="' . get_the_permalink() . '">';
-					if( !empty( get_the_post_thumbnail( get_the_ID() ) ) ) {
+					/*if( !empty( get_the_post_thumbnail( get_the_ID() ) ) ) {
 						echo get_the_post_thumbnail( get_the_ID(), 'full' );
+					} else {
+						echo '<img src="' . plugins_url( '../../images/no-image.png' , __FILE__ ) . '" alt="Image Not Avalable" />';
+					}*/
+					$post_img = get_field( 'topic_images', get_the_ID() );
+					if( !empty( $post_img ) ) {
+						echo '<img src="'. $post_img .'" alt="">';
 					} else {
 						echo '<img src="' . plugins_url( '../../images/no-image.png' , __FILE__ ) . '" alt="Image Not Avalable" />';
 					}
