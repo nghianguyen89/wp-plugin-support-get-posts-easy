@@ -46,21 +46,35 @@
         });
 
         /* button loadmore post by ajax */
-        $(sgpe_loadmore).on("click", function (e) {
+        $(sgpe_loadmore).on('click', function (e) {
             e.preventDefault();
-            var obj = $(this).parents(sgpe_container).data("options");
-            console.log(obj);
-            $.post(obj.siteUrl + "/wp-admin/admin-ajax.php", {
-                action: 'pager',
-                getpost_option: obj
+            var _this_container = $(this).parents(sgpe_container);
+            var _this_grid = $(this).prev(sgpe_grid);
+            var _options = _this_container.data('options');
+            var next_page = $(this).data('current') + 1;
+
+            $.post(_options.siteUrl + '/wp-admin/admin-ajax.php', {
+                    action: 'sgpe_pager',
+                    page: next_page,
+                    options: _options
             })
             .done(function (data) {
+                var _btn_loadmore = _this_container.find(sgpe_loadmore);
+                /* set page current & update page */
+                _btn_loadmore.attr('data-current', next_page);
+                _btn_loadmore.data('current', next_page);
+
+                /* hide button loadmore if last page */
+                if(_options.pageAll == next_page)
+                    _btn_loadmore.hide();
+                    
+                /* load more data */
                 if (data != "") {
-                    console.log(data);
+                    var items = $(data);
+                    _this_grid.append(items).masonry('appended', items);
+                    setTimeout(function () { $(_this_grid).masonry('layout'); }, 1000);
                 }
             });
-
-            
         });
     }
 })(jQuery);

@@ -180,27 +180,27 @@ function sgpe_shortcode_getposts( $atts ) {
 		//$template_customs = dirname(__FILE__) . '/templates/' . $sgpe_template . '.php';
 		
 		/* options */
-		$sgpe_post_options .= 	'"msnrColWidth":300,' .
-								'"msnrItemSelector":".sgpe-listgroup__block",' . 
-								'"postType":"' . $sgpe_post_type . '",' .
+		$sgpe_post_options .= 	'"postType":"' . $sgpe_post_type . '",' .
 								'"postTaxonomy":"' . $sgpe_taxonomy . '",' .
-								'"postTemplateCustom":"' . $atts['template_custom'] . '",' .
-								'"postTemplateName":"' . $atts['template_name'] . '",' .
-								'"siteUrl":"' . get_site_url() . '",' .
-								'"pageCurrent":' . $paged . ',' .
-								'"pageAll":' . $sgpe_getposts->max_num_pages;
-
-        echo '<div class="sgpe-list" data-options=\'{' . $sgpe_post_options . '}\'>';
-            // if( $sgpe_template != '' && file_exists( $template_customs ) ) {
-            //     include( $template_customs );
-            // } else {
-            //     include( $template_default_post_content );
-			// }
-			include( $template_default_post_content );
-			echo '<p class="sgpe-loadmore" id="sgpe-loadmore_' . $sgpe_post_type . '"><a href="#">load more ...</a></p>';
-		echo '</div>';
-
+								'"postPerPage":"' . $sgpe_posts_per_page . '",' .
+								'"pageAll":"' . $sgpe_getposts->max_num_pages . '",' .
+								'"siteUrl":"' . get_site_url() . '"';
+		
+		if( !empty( $_POST[ 'options' ] ) ) {
+			include( $template_default_post_loop );
+		} else {
+			echo '<div class="sgpe-list" data-options=\'{' . $sgpe_post_options . '}\'>';           
+				include( $template_default_post_content );
+				echo '<p class="sgpe-loadmore" data-current="' . $paged . '" id="sgpe-loadmore_' . $sgpe_post_type . '"><a href="#">load more ...</a></p>';
+			echo '</div>';
+		}
 		wp_reset_postdata();
+
+		/*if( $sgpe_template != '' && file_exists( $template_customs ) ) {
+			include( $template_customs );
+		} else {
+			include( $template_default_post_content );
+		}*/
 		
 	}else{
 		/* no post */
@@ -213,15 +213,25 @@ add_shortcode( 'sgpe', 'sgpe_shortcode_getposts' );
 
 
 /**
- * Function 	: pager()
+ * Function 	: sgpe_pager()
  * Description  : Load more post
  * @return 		: post
  */
-add_action( 'wp_ajax_pager', 'pager' );
-add_action( 'wp_ajax_nopriv_pager', 'pager' );
-function pager() {
-	$param = $_POST[ 'getpost_option' ]; var_dump($param);
-	// do_shortcode( '[sgpe post_type="' . $param['post_type'] . '" pagination="false"]' );
+add_action( 'wp_ajax_sgpe_pager', 'sgpe_pager' );
+add_action( 'wp_ajax_nopriv_sgpe_pager', 'sgpe_pager' );
+function sgpe_pager() {
+	/* get POST option */
+	$paged = $_POST['page'];
+	$param = $_POST[ 'options' ];
+
+	/* assign parameter options */
+	$post_type		= $param['postType'];
+	$taxonomy		= $param['postTaxonomy'];	
+	$posts_per_page	= $param['postPerPage'];
+
+	/* get post of next page */
+	$post_loop 	= dirname(__FILE__) . '/templates/post/list-loop.php';
+	echo do_shortcode( '[sgpe post_type="' . $post_type . '" taxonomy="' . $taxonomy . '" posts_per_page="' . $posts_per_page . '" paged="' . $paged . '" template="' . $post_loop . '" pagination="false"]' );
 	die();
 }
 
